@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/features/authentication/view/authentication_screen.dart';
+import 'package:to_do_app/features/authentication/view/decision_screen.dart';
 import 'package:to_do_app/features/on_boarding/widget/on_boarding_widget.dart';
 import 'package:to_do_app/global/widgets/custom_elevated_button.dart';
 
@@ -40,7 +41,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     } else {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const AuthenticationScreen(),
+          builder: (context) => const DecisionScreen(),
         ),
       );
     }
