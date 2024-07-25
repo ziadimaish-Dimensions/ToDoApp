@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/features/authentication/view/authentication_screen.dart';
+import 'package:to_do_app/features/sign_in/view/sign_in_screen.dart';
+import 'package:to_do_app/features/sign_up/view/sign_up_screen.dart';
 import 'package:to_do_app/global/widgets/custom_elevated_button.dart';
 
 class DecisionScreen extends StatelessWidget {
@@ -41,7 +42,7 @@ class DecisionScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const AuthenticationScreen(),
+                      builder: (context) => const SignInScreen(),
                     ),
                   );
                 },
@@ -50,7 +51,13 @@ class DecisionScreen extends StatelessWidget {
               const SizedBox(height: 20),
               CustomElevatedButton(
                 text: 'CREATE ACCOUNT',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SignUpScreen(),
+                    ),
+                  );
+                },
                 color: Colors.transparent,
                 borderColor: const Color(0xFF8875FF),
               ),

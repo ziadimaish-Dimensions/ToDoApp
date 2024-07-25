@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/features/authentication/view/authentication_screen.dart';
-import 'package:to_do_app/features/authentication/view/decision_screen.dart';
 import 'package:to_do_app/features/on_boarding/widget/on_boarding_widget.dart';
+import 'package:to_do_app/features/sign_in/view/decision_screen.dart';
 import 'package:to_do_app/global/widgets/custom_elevated_button.dart';
 
 class OnBoardingScreen extends StatefulWidget {
