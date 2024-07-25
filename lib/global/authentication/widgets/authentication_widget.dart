@@ -43,7 +43,7 @@ class AuthenticationWidget extends StatelessWidget {
         automaticallyImplyLeading: true,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +187,7 @@ class AuthenticationWidget extends StatelessWidget {
                 ),
               ),
             ),
-            const Spacer(),
+            const SizedBox(height: 20),
             Center(
               child: GestureDetector(
                 onTap: onBottomTextPressed,

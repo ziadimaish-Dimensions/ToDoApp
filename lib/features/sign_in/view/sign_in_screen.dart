@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 import '../../../global/authentication/widgets/authentication_widget.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -43,24 +44,26 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void onBottomTextPressed() {
     // Navigate to the sign-up screen or other actions
-    Navigator.pushNamed(context, '/signup'); // Replace with actual route name
+    Navigator.pushNamed(context, '/signup');
   }
 
   @override
   Widget build(BuildContext context) {
-    return AuthenticationWidget(
-      title: 'Login',
-      firstTextField: 'Username',
-      secondTextField: 'Password',
-      actionText: 'Login',
-      bottomText: "Don't have an account? Register",
-      isSignUp: false,
-      firstController: usernameController,
-      secondController: passwordController,
-      onPressed: onSignInPressed,
-      onGooglePressed: onGoogleLoginPressed,
-      onApplePressed: onAppleLoginPressed,
-      onBottomTextPressed: onBottomTextPressed,
+    return DismissKeyboard(
+      child: AuthenticationWidget(
+        title: 'Login',
+        firstTextField: 'Username',
+        secondTextField: 'Password',
+        actionText: 'Login',
+        bottomText: "Don't have an account? Register",
+        isSignUp: false,
+        firstController: usernameController,
+        secondController: passwordController,
+        onPressed: onSignInPressed,
+        onGooglePressed: onGoogleLoginPressed,
+        onApplePressed: onAppleLoginPressed,
+        onBottomTextPressed: onBottomTextPressed,
+      ),
     );
   }
 }
