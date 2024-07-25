@@ -10,6 +10,11 @@ class DecisionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -19,7 +24,7 @@ class DecisionScreen extends StatelessWidget {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Welcome to UpTodo',
                     style: TextStyle(
                       color: Colors.white,
@@ -29,39 +34,44 @@ class DecisionScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
               const Text(
-                'Please login to your account or create new account to continue',
+                'Please login to your account or create a new account to continue',
                 style: TextStyle(
                   color: Colors.white70,
                   fontSize: 16,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 50),
-              CustomElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const SignInScreen(),
-                    ),
-                  );
-                },
-                text: 'LOGIN',
-              ),
-              const SizedBox(height: 20),
-              CustomElevatedButton(
-                text: 'CREATE ACCOUNT',
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SignUpScreen(),
-                    ),
-                  );
-                },
-                color: Colors.transparent,
-                borderColor: const Color(0xFF8875FF),
-              ),
               const Spacer(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SignInScreen(),
+                        ),
+                      );
+                    },
+                    text: 'LOGIN',
+                  ),
+                  const SizedBox(height: 20),
+                  CustomElevatedButton(
+                    text: 'CREATE ACCOUNT',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpScreen(),
+                        ),
+                      );
+                    },
+                    color: Colors.transparent,
+                    borderColor: const Color(0xFF8875FF),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
