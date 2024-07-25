@@ -5,6 +5,9 @@ class AuthenticationWidget extends StatelessWidget {
   final String firstTextField;
   final String secondTextField;
   final String? thirdTextField;
+  final String firstHintText;
+  final String secondHintText;
+  final String? thirdHintText;
   final String actionText;
   final String bottomText;
   final bool isSignUp;
@@ -22,6 +25,9 @@ class AuthenticationWidget extends StatelessWidget {
     required this.firstTextField,
     required this.secondTextField,
     this.thirdTextField,
+    required this.firstHintText,
+    required this.secondHintText,
+    this.thirdHintText,
     required this.actionText,
     required this.bottomText,
     this.isSignUp = false,
@@ -70,7 +76,7 @@ class AuthenticationWidget extends StatelessWidget {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey[800],
-                hintText: 'Enter your Username',
+                hintText: firstHintText,
                 hintStyle: TextStyle(color: Colors.grey[600]),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -94,7 +100,7 @@ class AuthenticationWidget extends StatelessWidget {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey[800],
-                hintText: 'Enter your Password',
+                hintText: secondHintText,
                 hintStyle: TextStyle(color: Colors.grey[600]),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -114,11 +120,12 @@ class AuthenticationWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               TextField(
+                obscureText: true,
                 controller: thirdController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[800],
-                  hintText: 'Enter your Additional Info',
+                  hintText: thirdHintText,
                   hintStyle: TextStyle(color: Colors.grey[600]),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),

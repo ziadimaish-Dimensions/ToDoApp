@@ -1,6 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/features/home/home_screen.dart';
+import 'package:to_do_app/features/sign_in/view/sign_in_screen.dart';
 import 'package:to_do_app/global/authentication/authentication_repository.dart';
+import 'package:to_do_app/global/authentication/widgets/authentication_widget.dart';
+import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -10,66 +13,105 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  late final TextEditingController confirmPasswordController;
+  late final TextEditingController emailController;
+  late final TextEditingController passwordController;
   final AuthenticationRepository _authRepository = AuthenticationRepository();
 
   @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
+  }
+
+  @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void _signUp() async {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-    String name = _nameController.text;
+  Future<void> onSignUpPressed() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final confirmPassword = confirmPasswordController.text.trim();
 
-    User? user = await _authRepository.signUpWithEmailPassword(email, password, name);
-    if (user != null) {
-      // Successfully signed up
-      print('User signed up: ${user.email}');
-      // Navigate to home screen or show success message
-    } else {
-      // Failed to sign up
-      print('Failed to sign up');
-      // Show error message
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      _showErrorMessage("Please fill in all fields.");
+      return;
     }
+
+    if (password != confirmPassword) {
+      _showErrorMessage("Passwords do not match.");
+      return;
+    }
+
+    final user = await _authRepository.signUpWithEmailPassword(email, password);
+
+    if (mounted) {
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
+      } else {
+        _showErrorMessage("Sign-up failed. Please try again.");
+      }
+    }
+  }
+
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  void onGoogleLoginPressed() {
+    print("Google Login Pressed");
+  }
+
+  void onAppleLoginPressed() {
+    print("Apple Login Pressed");
+  }
+
+  void onBottomTextPressed() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignInScreen(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Password'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _signUp,
-              child: const Text('Sign Up'),
-            ),
-          ],
-        ),
+    return DismissKeyboard(
+      child: AuthenticationWidget(
+        title: 'Register',
+        firstTextField: 'Email',
+        secondTextField: 'Password',
+        thirdTextField: 'Confirm Password',
+        actionText: 'Register',
+        bottomText: "Already have an account? Login",
+        isSignUp: true,
+        firstController: emailController,
+        secondController: passwordController,
+        thirdController: confirmPasswordController,
+        onPressed: onSignUpPressed,
+        onGooglePressed: onGoogleLoginPressed,
+        onApplePressed: onAppleLoginPressed,
+        onBottomTextPressed: onBottomTextPressed,
+        firstHintText: 'Enter your Email',
+        secondHintText: 'Enter your Password',
+        thirdHintText: 'Confirm your Password',
       ),
     );
   }
