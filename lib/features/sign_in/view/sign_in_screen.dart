@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/features/home/home_screen.dart';
 import 'package:to_do_app/features/sign_up/view/sign_up_screen.dart';
 import 'package:to_do_app/global/authentication/authentication_repository.dart';
+import 'package:to_do_app/global/widgets/bottom_nav_bar_widget.dart';
 import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 import '../../../global/authentication/widgets/authentication_widget.dart';
 
@@ -47,7 +47,7 @@ class _SignInScreenState extends State<SignInScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
+            builder: (context) => const BottomNavBarWidget(),
           ),
         );
       } else {
