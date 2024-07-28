@@ -16,6 +16,7 @@ class _SignInScreenState extends State<SignInScreen> {
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
   final AuthenticationRepository _authRepository = AuthenticationRepository();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -32,17 +33,28 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> onSignInPressed() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
       _showErrorMessage("Please enter both email and password");
+      setState(() {
+        _isLoading = false;
+      });
       return;
     }
 
     final user = await _authRepository.signInWithEmailPassword(email, password);
 
     if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+
       if (user != null) {
         Navigator.pushReplacement(
           context,
@@ -83,25 +95,40 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  void _handleSignInPressed() {
+    onSignInPressed();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DismissKeyboard(
-      child: AuthenticationWidget(
-        title: 'Login',
-        firstTextField: 'Email',
-        secondTextField: 'Password',
-        actionText: 'Login',
-        bottomText: "Don't have an account? Register",
-        isSignUp: false,
-        firstController: emailController,
-        secondController: passwordController,
-        onPressed: onSignInPressed,
-        onGooglePressed: onGoogleLoginPressed,
-        onApplePressed: onAppleLoginPressed,
-        onBottomTextPressed: onBottomTextPressed,
-        firstHintText: 'Enter your Email',
-        secondHintText: 'Enter your Password',
-      ),
+    return Stack(
+      children: [
+        DismissKeyboard(
+          child: AuthenticationWidget(
+            title: 'Login',
+            firstTextField: 'Email',
+            secondTextField: 'Password',
+            actionText: 'Login',
+            bottomText: "Don't have an account? Register",
+            isSignUp: false,
+            firstController: emailController,
+            secondController: passwordController,
+            onPressed: _isLoading ? () {} : _handleSignInPressed,
+            onGooglePressed: onGoogleLoginPressed,
+            onApplePressed: onAppleLoginPressed,
+            onBottomTextPressed: onBottomTextPressed,
+            firstHintText: 'Enter your Email',
+            secondHintText: 'Enter your Password',
+          ),
+        ),
+        if (_isLoading)
+          Container(
+            color: Colors.black54,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
     );
   }
 }

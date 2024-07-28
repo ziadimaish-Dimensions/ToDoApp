@@ -5,7 +5,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
-
+    return Scaffold(
+      body: Column(
+        children: [Image.asset('assets/images/homeScreenLogo.png')],
+      ),
+    );
   }
 }

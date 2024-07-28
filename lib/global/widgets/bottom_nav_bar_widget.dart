@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:to_do_app/features/home/home_screen.dart';
+import 'package:to_do_app/features/settings/view/settings_screen.dart';
 
 class BottomNavBarWidget extends StatefulWidget {
   const BottomNavBarWidget({super.key});
@@ -59,22 +60,19 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
 
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+    Text(
+      'Index',
+      style: optionStyle,
+    ),
     Text(
       'Calendar',
       style: optionStyle,
     ),
-    Text(
-      'Search',
-      style: optionStyle,
-    ),
+    HomeScreen(),
     Text(
       'Focus',
       style: optionStyle,
     ),
-    Text(
-      'Profile',
-      style: optionStyle,
-    ),
+    SettingsScreen(),
   ];
 }
