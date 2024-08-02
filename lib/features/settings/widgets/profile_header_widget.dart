@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app/global/user_service.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final user = UserService();
+
+    return Column(
       children: [
-        SizedBox(height: 20),
-        CircleAvatar(
+        const SizedBox(height: 20),
+        const CircleAvatar(
           radius: 40,
-          backgroundImage: NetworkImage(
-              'https://example.com/profile.jpg'), // Replace with actual image URL
+          backgroundImage: NetworkImage('https://example.com/profile.jpg'),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
-          'Martha Hays',
-          style: TextStyle(
+          user.userName ?? 'Guest',
+          style: const TextStyle(
               color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ],

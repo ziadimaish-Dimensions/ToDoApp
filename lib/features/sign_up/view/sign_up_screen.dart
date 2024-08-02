@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/features/sign_in/view/sign_in_screen.dart';
 import 'package:to_do_app/global/authentication/authentication_repository.dart';
 import 'package:to_do_app/global/authentication/widgets/authentication_widget.dart';
+import 'package:to_do_app/global/user_service.dart';
 import 'package:to_do_app/global/widgets/bottom_nav_bar_widget.dart';
 import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 
@@ -14,9 +15,9 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   late final TextEditingController nameController;
-  late final TextEditingController confirmPasswordController;
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
+  late final TextEditingController confirmPasswordController;
   final AuthenticationRepository _authRepository = AuthenticationRepository();
   bool _isLoading = false;
 
@@ -76,6 +77,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });
 
       if (user != null) {
+        UserService().setUserData(user.uid, user.email!, name);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -83,8 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         );
       } else {
-        _showErrorMessage(
-            "Sign-up failed. The email address is already in use.");
+        _showErrorMessage("Sign-up failed. Please try again.");
       }
     }
   }
@@ -94,23 +96,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-  void onGoogleLoginPressed() {
-    print("Google Login Pressed");
-  }
-
-  void onAppleLoginPressed() {
-    print("Apple Login Pressed");
-  }
-
-  void onBottomTextPressed() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SignInScreen(),
       ),
     );
   }
@@ -151,6 +136,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
       ],
+    );
+  }
+
+  void onGoogleLoginPressed() {
+    print("Google Login Pressed");
+  }
+
+  void onAppleLoginPressed() {
+    print("Apple Login Pressed");
+  }
+
+  void onBottomTextPressed() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignInScreen(),
+      ),
     );
   }
 }
