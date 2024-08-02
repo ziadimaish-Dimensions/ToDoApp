@@ -13,6 +13,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  late final TextEditingController nameController;
   late final TextEditingController confirmPasswordController;
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
@@ -22,6 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
+    nameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
@@ -29,6 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -40,11 +43,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _isLoading = true;
     });
 
+    final name = nameController.text.trim();
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
       _showErrorMessage("Please fill in all fields.");
       setState(() {
         _isLoading = false;
@@ -60,7 +67,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
-    final user = await _authRepository.signUpWithEmailPassword(email, password);
+    final user =
+        await _authRepository.signUpWithEmailPassword(email, password, name);
 
     if (mounted) {
       setState(() {
@@ -75,7 +83,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         );
       } else {
-        _showErrorMessage("Sign-up failed. Please try again.");
+        _showErrorMessage(
+            "Sign-up failed. The email address is already in use.");
       }
     }
   }
@@ -113,22 +122,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
         DismissKeyboard(
           child: AuthenticationWidget(
             title: 'Register',
-            firstTextField: 'Email',
-            secondTextField: 'Password',
-            thirdTextField: 'Confirm Password',
+            firstTextField: 'Name',
+            secondTextField: 'Email',
+            thirdTextField: 'Password',
+            fourthTextField: 'Confirm Password',
             actionText: 'Register',
             bottomText: "Already have an account? Login",
             isSignUp: true,
-            firstController: emailController,
-            secondController: passwordController,
-            thirdController: confirmPasswordController,
+            firstController: nameController,
+            secondController: emailController,
+            thirdController: passwordController,
+            fourthController: confirmPasswordController,
             onPressed: _isLoading ? () {} : onSignUpPressed,
             onGooglePressed: onGoogleLoginPressed,
             onApplePressed: onAppleLoginPressed,
             onBottomTextPressed: onBottomTextPressed,
-            firstHintText: 'Enter your Email',
-            secondHintText: 'Enter your Password',
-            thirdHintText: 'Confirm your Password',
+            firstHintText: 'Enter your Name',
+            secondHintText: 'Enter your Email',
+            thirdHintText: 'Enter your Password',
+            fourthHintText: 'Confirm your Password',
           ),
         ),
         if (_isLoading)

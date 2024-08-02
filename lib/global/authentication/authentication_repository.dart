@@ -5,7 +5,8 @@ class AuthenticationRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> signUpWithEmailPassword(String email, String password) async {
+  Future<User?> signUpWithEmailPassword(
+      String email, String password, String name) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -18,13 +19,18 @@ class AuthenticationRepository {
       if (user != null) {
         await _firestore.collection('users').doc(user.uid).set({
           'email': email,
+          'name': name,
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
 
       return user;
     } on FirebaseAuthException catch (e) {
-      print('Error: $e');
+      if (e.code == 'email-already-in-use') {
+        print('Error: The email address is already in use by another account.');
+      } else {
+        print('Error: $e');
+      }
       return null;
     }
   }

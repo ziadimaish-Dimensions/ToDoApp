@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app/global/widgets/custom_text_field.dart';
 
 class AuthenticationWidget extends StatelessWidget {
   final String title;
   final String firstTextField;
   final String secondTextField;
   final String? thirdTextField;
+  final String? fourthTextField;
   final String firstHintText;
   final String secondHintText;
   final String? thirdHintText;
+  final String? fourthHintText;
   final String actionText;
   final String bottomText;
   final bool isSignUp;
   final TextEditingController firstController;
   final TextEditingController secondController;
   final TextEditingController? thirdController;
+  final TextEditingController? fourthController;
   final VoidCallback onPressed;
   final VoidCallback onGooglePressed;
   final VoidCallback onApplePressed;
@@ -25,15 +29,18 @@ class AuthenticationWidget extends StatelessWidget {
     required this.firstTextField,
     required this.secondTextField,
     this.thirdTextField,
+    this.fourthTextField,
     required this.firstHintText,
     required this.secondHintText,
     this.thirdHintText,
+    this.fourthHintText,
     required this.actionText,
     required this.bottomText,
     this.isSignUp = false,
     required this.firstController,
     required this.secondController,
     this.thirdController,
+    this.fourthController,
     required this.onPressed,
     required this.onGooglePressed,
     required this.onApplePressed,
@@ -63,76 +70,35 @@ class AuthenticationWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              firstTextField,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
+            CustomTextField(
+              label: firstTextField,
+              hintText: firstHintText,
               controller: firstController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.grey[800],
-                hintText: firstHintText,
-                hintStyle: TextStyle(color: Colors.grey[600]),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
             ),
             const SizedBox(height: 20),
-            Text(
-              secondTextField,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
+            CustomTextField(
+              label: secondTextField,
+              hintText: secondHintText,
               controller: secondController,
-              obscureText: true,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.grey[800],
-                hintText: secondHintText,
-                hintStyle: TextStyle(color: Colors.grey[600]),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
+              obscureText:
+                  isSignUp ? false : true, // Email is not obscured for sign-up
             ),
             if (isSignUp && thirdTextField != null) ...[
               const SizedBox(height: 20),
-              Text(
-                thirdTextField!,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
+              CustomTextField(
+                label: thirdTextField!,
+                hintText: thirdHintText!,
+                controller: thirdController!,
                 obscureText: true,
-                controller: thirdController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  hintText: thirdHintText,
-                  hintStyle: TextStyle(color: Colors.grey[600]),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
+              ),
+            ],
+            if (isSignUp && fourthTextField != null) ...[
+              const SizedBox(height: 20),
+              CustomTextField(
+                label: fourthTextField!,
+                hintText: fourthHintText!,
+                controller: fourthController!,
+                obscureText: true,
               ),
             ],
             const SizedBox(height: 30),
