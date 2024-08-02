@@ -16,12 +16,15 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        title: const Text('Profile'),
+        title: const Text(
+          'Profile',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
       ),
       body: const SingleChildScrollView(
         child: Column(
-          children: const [
+          children: [
             ProfileHeader(),
             TaskInfo(),
             SettingsSection(),

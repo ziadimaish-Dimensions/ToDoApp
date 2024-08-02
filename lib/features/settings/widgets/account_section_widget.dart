@@ -6,8 +6,8 @@ class AccountSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         SettingsTile(icon: Icons.person, title: 'Change account name'),
         SettingsTile(icon: Icons.lock, title: 'Change account password'),
         SettingsTile(icon: Icons.image, title: 'Change account image'),
