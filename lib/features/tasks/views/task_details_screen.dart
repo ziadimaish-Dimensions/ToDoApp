@@ -18,11 +18,17 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   final TaskRepository _taskRepository = TaskRepository();
   late TaskModel _task;
   final _formKey = GlobalKey<FormState>();
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+  String? _dateError;
+  String? _timeError;
 
   @override
   void initState() {
     super.initState();
     _task = widget.task;
+    _selectedDate = _task.time;
+    _selectedTime = TimeOfDay(hour: _task.time.hour, minute: _task.time.minute);
   }
 
   void _editTask(BuildContext context) {
@@ -30,120 +36,206 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         TextEditingController(text: _task.name);
     final TextEditingController detailsController =
         TextEditingController(text: _task.details);
-    DateTime selectedDate = _task.time;
-    TimeOfDay selectedTime =
-        TimeOfDay(hour: _task.time.hour, minute: _task.time.minute);
 
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.grey[600],
-          title:
-              const Text('Update Task', style: TextStyle(color: Colors.white)),
-          content: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomTextField(
-                    controller: nameController,
-                    label: 'Edit Name',
-                    hintText: 'Input the task name',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a task name';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  CustomTextField(
-                    controller: detailsController,
-                    label: 'Edit Details',
-                    hintText: 'Input the task details',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter task details';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  _DatePicker(
-                    selectedDate: selectedDate,
-                    onDatePicked: (date) {
-                      selectedDate = date;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  _TimePicker(
-                    selectedTime: selectedTime,
-                    onTimePicked: (time) {
-                      selectedTime = time;
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final updatedTask = TaskModel(
-                        id: _task.id,
-                        name: nameController.text,
-                        details: detailsController.text,
-                        time: DateTime(
-                          selectedDate.year,
-                          selectedDate.month,
-                          selectedDate.day,
-                          selectedTime.hour,
-                          selectedTime.minute,
-                        ),
-                        userId: _task.userId,
-                      );
-                      _taskRepository.updateTask(_task.id, updatedTask);
-                      setState(() {
-                        _task = updatedTask;
-                      });
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('Task updated successfully'),
-                          backgroundColor: Colors.blue,
-                          duration: const Duration(seconds: 3),
-                          action: SnackBarAction(
-                            label: 'UNDO',
-                            onPressed: () {
-                              setState(() {
-                                _task = widget.task;
-                              });
-                              _taskRepository.updateTask(_task.id, widget.task);
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return AlertDialog(
+              backgroundColor: Colors.grey[600],
+              title: const Text('Update Task',
+                  style: TextStyle(color: Colors.white)),
+              content: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomTextField(
+                        controller: nameController,
+                        label: 'Edit Name',
+                        hintText: 'Input the task name',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a task name';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      CustomTextField(
+                        controller: detailsController,
+                        label: 'Edit Details',
+                        hintText: 'Input the task details',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter task details';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _selectedDate == null
+                                  ? 'No date chosen!'
+                                  : 'Picked Date: ${DateFormat('dd-MM-yyyy').format(_selectedDate!)}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: _selectedDate ?? DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2101),
+                              );
+                              if (picked != null && picked != _selectedDate) {
+                                setModalState(() {
+                                  _selectedDate = picked;
+                                  _dateError = null;
+                                });
+                              }
                             },
+                            child: const Text('Choose Date'),
+                          ),
+                        ],
+                      ),
+                      if (_dateError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            _dateError!,
+                            style: const TextStyle(color: Colors.red),
                           ),
                         ),
-                      );
-                    }
-                  },
-                  text: 'Update',
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _selectedTime == null
+                                  ? 'No time chosen!'
+                                  : 'Picked Time: ${_selectedTime!.format(context)}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              final TimeOfDay? picked = await showTimePicker(
+                                context: context,
+                                initialTime: _selectedTime ?? TimeOfDay.now(),
+                              );
+                              if (picked != null && picked != _selectedTime) {
+                                setModalState(() {
+                                  _selectedTime = picked;
+                                  _timeError = null;
+                                });
+                              }
+                            },
+                            child: const Text('Choose Time'),
+                          ),
+                        ],
+                      ),
+                      if (_timeError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            _timeError!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-                const SizedBox(width: 8),
-                CustomElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  text: 'Cancel',
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          if (_selectedDate == null) {
+                            setModalState(() {
+                              _dateError = 'Please choose a date';
+                            });
+                            return;
+                          }
+                          if (_selectedTime == null) {
+                            setModalState(() {
+                              _timeError = 'Please choose a time';
+                            });
+                            return;
+                          }
+
+                          final dateTime = DateTime(
+                            _selectedDate!.year,
+                            _selectedDate!.month,
+                            _selectedDate!.day,
+                            _selectedTime!.hour,
+                            _selectedTime!.minute,
+                          );
+                          if (dateTime.isBefore(DateTime.now())) {
+                            setModalState(() {
+                              _dateError =
+                                  'Date and time must be in the future or today';
+                              _timeError =
+                                  'Date and time must be in the future or today';
+                            });
+                            return;
+                          }
+
+                          final updatedTask = TaskModel(
+                            id: _task.id,
+                            name: nameController.text,
+                            details: detailsController.text,
+                            time: dateTime,
+                            userId: _task.userId,
+                          );
+                          _taskRepository.updateTask(_task.id, updatedTask);
+                          setState(() {
+                            _task = updatedTask;
+                          });
+                          Navigator.of(context).pop();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Task updated successfully'),
+                              backgroundColor: Colors.blue,
+                              duration: const Duration(seconds: 3),
+                              action: SnackBarAction(
+                                label: 'UNDO',
+                                onPressed: () {
+                                  setState(() {
+                                    _task = widget.task;
+                                  });
+                                  _taskRepository.updateTask(
+                                      _task.id, widget.task);
+                                },
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      text: 'Update',
+                    ),
+                    const SizedBox(width: 8),
+                    CustomElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      text: 'Cancel',
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
+            );
+          },
         );
       },
     );
@@ -211,9 +303,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               children: [
                 const Icon(Icons.access_time, color: Colors.white70),
                 const SizedBox(width: 10),
-                const Text(
+                Text(
                   'Task Time:',
-                  style: TextStyle(color: Colors.white70),
+                  style: const TextStyle(color: Colors.white70),
                 ),
                 const SizedBox(width: 10),
                 Container(
@@ -252,76 +344,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _DatePicker extends StatelessWidget {
-  final DateTime selectedDate;
-  final Function(DateTime) onDatePicked;
-
-  const _DatePicker({required this.selectedDate, required this.onDatePicked});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            'Picked Date: ${DateFormat('dd-MM-yyyy').format(selectedDate)}',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        TextButton(
-          onPressed: () async {
-            final DateTime? picked = await showDatePicker(
-              context: context,
-              initialDate: selectedDate,
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2101),
-            );
-            if (picked != null) {
-              onDatePicked(picked);
-            }
-          },
-          child:
-              const Text('Choose Date', style: TextStyle(color: Colors.white)),
-        ),
-      ],
-    );
-  }
-}
-
-class _TimePicker extends StatelessWidget {
-  final TimeOfDay selectedTime;
-  final Function(TimeOfDay) onTimePicked;
-
-  const _TimePicker({required this.selectedTime, required this.onTimePicked});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            'Picked Time: ${selectedTime.format(context)}',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        TextButton(
-          onPressed: () async {
-            final TimeOfDay? picked = await showTimePicker(
-              context: context,
-              initialTime: selectedTime,
-            );
-            if (picked != null) {
-              onTimePicked(picked);
-            }
-          },
-          child:
-              const Text('Choose Time', style: TextStyle(color: Colors.white)),
-        ),
-      ],
     );
   }
 }

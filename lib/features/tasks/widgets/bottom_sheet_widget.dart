@@ -21,6 +21,8 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   final TextEditingController _detailsController = TextEditingController();
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  String? _dateError;
+  String? _timeError;
   final TaskRepository _taskRepository = TaskRepository();
   User? _currentUser;
 
@@ -47,6 +49,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+        _dateError = null;
       });
     }
   }
@@ -59,20 +62,23 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
     if (picked != null && picked != _selectedTime) {
       setState(() {
         _selectedTime = picked;
+        _timeError = null;
       });
     }
   }
 
   void _addTask() {
     if (_formKey.currentState!.validate()) {
-      if (_selectedDate == null || _selectedTime == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Please select date and time'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+      if (_selectedDate == null) {
+        setState(() {
+          _dateError = 'Please choose a date';
+        });
+        return;
+      }
+      if (_selectedTime == null) {
+        setState(() {
+          _timeError = 'Please choose a time';
+        });
         return;
       }
 
@@ -83,6 +89,14 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
         _selectedTime!.hour,
         _selectedTime!.minute,
       );
+      if (dateTime.isBefore(DateTime.now())) {
+        setState(() {
+          _dateError = 'Date and time must be in the future or today';
+          _timeError = 'Date and time must be in the future or today';
+        });
+        return;
+      }
+
       final task = TaskModel(
         id: '',
         name: _nameController.text,
@@ -98,20 +112,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
         _selectedDate = null;
         _selectedTime = null;
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Task added successfully'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 3),
-          action: SnackBarAction(
-            label: 'UNDO',
-            onPressed: () {
-              _taskRepository.deleteTask(task.id);
-            },
-          ),
-        ),
-      );
 
       Navigator.pop(context);
     }
@@ -178,6 +178,14 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ),
                     ],
                   ),
+                  if (_dateError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        _dateError!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                   const SizedBox(height: 15),
                   Row(
                     children: [
@@ -198,6 +206,14 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ),
                     ],
                   ),
+                  if (_timeError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        _timeError!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                   const SizedBox(height: 30),
                   Center(
                     child: CustomElevatedButton(
