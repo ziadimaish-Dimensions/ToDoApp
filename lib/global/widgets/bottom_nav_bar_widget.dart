@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:to_do_app/features/home/home_screen.dart';
+import 'package:to_do_app/features/tasks/tasks_screen.dart';
 import 'package:to_do_app/features/settings/view/settings_screen.dart';
 
 class BottomNavBarWidget extends StatefulWidget {
