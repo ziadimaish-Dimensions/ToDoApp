@@ -16,6 +16,7 @@ class BottomSheetWidget extends StatefulWidget {
 }
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
   DateTime? _selectedDate;
@@ -63,30 +64,57 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   }
 
   void _addTask() {
-    if (_nameController.text.isEmpty ||
-        _detailsController.text.isEmpty ||
-        _selectedDate == null ||
-        _selectedTime == null ||
-        _currentUser == null) {
-      return;
+    if (_formKey.currentState!.validate()) {
+      if (_selectedDate == null || _selectedTime == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Please select date and time'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        return;
+      }
+
+      final dateTime = DateTime(
+        _selectedDate!.year,
+        _selectedDate!.month,
+        _selectedDate!.day,
+        _selectedTime!.hour,
+        _selectedTime!.minute,
+      );
+      final task = TaskModel(
+        id: '',
+        name: _nameController.text,
+        details: _detailsController.text,
+        time: dateTime,
+        userId: widget.userId,
+      );
+
+      _taskRepository.addTask(task);
+      _nameController.clear();
+      _detailsController.clear();
+      setState(() {
+        _selectedDate = null;
+        _selectedTime = null;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Task added successfully'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(
+            label: 'UNDO',
+            onPressed: () {
+              _taskRepository.deleteTask(task.id);
+            },
+          ),
+        ),
+      );
+
+      Navigator.pop(context);
     }
-    final dateTime = DateTime(_selectedDate!.year, _selectedDate!.month,
-        _selectedDate!.day, _selectedTime!.hour, _selectedTime!.minute);
-    final task = TaskModel(
-      id: '',
-      name: _nameController.text,
-      details: _detailsController.text,
-      time: dateTime,
-      userId: _currentUser!.uid,
-    );
-    _taskRepository.addTask(task);
-    _nameController.clear();
-    _detailsController.clear();
-    setState(() {
-      _selectedDate = null;
-      _selectedTime = null;
-    });
-    Navigator.pop(context);
   }
 
   @override
@@ -96,72 +124,90 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
         return SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                left: 16,
-                right: 16,
-                top: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextField(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: 16,
+              right: 16,
+              top: 16,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomTextField(
                     label: 'Task Name',
                     hintText: 'Input the task name',
-                    controller: _nameController),
-                const SizedBox(height: 30),
-                CustomTextField(
+                    controller: _nameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a task name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  CustomTextField(
                     label: 'Task Details',
                     hintText: 'Input the task details',
-                    controller: _detailsController),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _selectedDate == null
-                            ? 'No date chosen!'
-                            : 'Picked Date: ${DateFormat('dd-MM-yyyy').format(_selectedDate!)}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        await _selectDate(context);
-                        setModalState(() {});
-                      },
-                      child: const Text('Choose Date'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _selectedTime == null
-                            ? 'No time chosen!'
-                            : 'Picked Time: ${_selectedTime!.format(context)}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        await _selectTime(context);
-                        setModalState(() {});
-                      },
-                      child: const Text('Choose Time'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Center(
-                  child: CustomElevatedButton(
-                    onPressed: _addTask,
-                    text: 'Add Task',
+                    controller: _detailsController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter task details';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                const SizedBox(height: 30),
-              ],
+                  const SizedBox(height: 30),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _selectedDate == null
+                              ? 'No date chosen!'
+                              : 'Picked Date: ${DateFormat('dd-MM-yyyy').format(_selectedDate!)}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await _selectDate(context);
+                          setModalState(() {});
+                        },
+                        child: const Text('Choose Date'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _selectedTime == null
+                              ? 'No time chosen!'
+                              : 'Picked Time: ${_selectedTime!.format(context)}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await _selectTime(context);
+                          setModalState(() {});
+                        },
+                        child: const Text('Choose Time'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: CustomElevatedButton(
+                      onPressed: _addTask,
+                      text: 'Add Task',
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         );

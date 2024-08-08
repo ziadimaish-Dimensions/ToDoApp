@@ -17,6 +17,7 @@ class TaskDetailScreen extends StatefulWidget {
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
   final TaskRepository _taskRepository = TaskRepository();
   late TaskModel _task;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -40,37 +41,52 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           backgroundColor: Colors.grey[600],
           title:
               const Text('Update Task', style: TextStyle(color: Colors.white)),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextField(
-                  controller: nameController,
-                  label: 'Edit Name',
-                  hintText: 'Input the task name',
-                ),
-                const SizedBox(height: 10),
-                CustomTextField(
-                  controller: detailsController,
-                  label: 'Edit Details',
-                  hintText: 'Input the task details',
-                ),
-                const SizedBox(height: 10),
-                _DatePicker(
-                  selectedDate: selectedDate,
-                  onDatePicked: (date) {
-                    selectedDate = date;
-                  },
-                ),
-                const SizedBox(height: 10),
-                _TimePicker(
-                  selectedTime: selectedTime,
-                  onTimePicked: (time) {
-                    selectedTime = time;
-                  },
-                ),
-              ],
+          content: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomTextField(
+                    controller: nameController,
+                    label: 'Edit Name',
+                    hintText: 'Input the task name',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a task name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  CustomTextField(
+                    controller: detailsController,
+                    label: 'Edit Details',
+                    hintText: 'Input the task details',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter task details';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  _DatePicker(
+                    selectedDate: selectedDate,
+                    onDatePicked: (date) {
+                      selectedDate = date;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  _TimePicker(
+                    selectedTime: selectedTime,
+                    onTimePicked: (time) {
+                      selectedTime = time;
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -79,24 +95,42 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               children: [
                 CustomElevatedButton(
                   onPressed: () {
-                    final updatedTask = TaskModel(
-                      id: _task.id,
-                      name: nameController.text,
-                      details: detailsController.text,
-                      time: DateTime(
-                        selectedDate.year,
-                        selectedDate.month,
-                        selectedDate.day,
-                        selectedTime.hour,
-                        selectedTime.minute,
-                      ),
-                      userId: _task.userId,
-                    );
-                    _taskRepository.updateTask(_task.id, updatedTask);
-                    setState(() {
-                      _task = updatedTask;
-                    });
-                    Navigator.of(context).pop();
+                    if (_formKey.currentState!.validate()) {
+                      final updatedTask = TaskModel(
+                        id: _task.id,
+                        name: nameController.text,
+                        details: detailsController.text,
+                        time: DateTime(
+                          selectedDate.year,
+                          selectedDate.month,
+                          selectedDate.day,
+                          selectedTime.hour,
+                          selectedTime.minute,
+                        ),
+                        userId: _task.userId,
+                      );
+                      _taskRepository.updateTask(_task.id, updatedTask);
+                      setState(() {
+                        _task = updatedTask;
+                      });
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Task updated successfully'),
+                          backgroundColor: Colors.blue,
+                          duration: const Duration(seconds: 3),
+                          action: SnackBarAction(
+                            label: 'UNDO',
+                            onPressed: () {
+                              setState(() {
+                                _task = widget.task;
+                              });
+                              _taskRepository.updateTask(_task.id, widget.task);
+                            },
+                          ),
+                        ),
+                      );
+                    }
                   },
                   text: 'Update',
                 ),
@@ -118,6 +152,20 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   void _deleteTask(BuildContext context) {
     _taskRepository.deleteTask(_task.id);
     Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Task deleted successfully'),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'UNDO',
+          onPressed: () {
+            _taskRepository.addTask(_task);
+            setState(() {});
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -197,7 +245,8 @@ class _DatePicker extends StatelessWidget {
   final DateTime selectedDate;
   final Function(DateTime) onDatePicked;
 
-  const _DatePicker({required this.selectedDate, required this.onDatePicked});
+  const _DatePicker(
+      {required this.selectedDate, required this.onDatePicked, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -233,10 +282,8 @@ class _TimePicker extends StatelessWidget {
   final TimeOfDay selectedTime;
   final Function(TimeOfDay) onTimePicked;
 
-  const _TimePicker({
-    required this.selectedTime,
-    required this.onTimePicked,
-  });
+  const _TimePicker(
+      {required this.selectedTime, required this.onTimePicked, super.key});
 
   @override
   Widget build(BuildContext context) {
