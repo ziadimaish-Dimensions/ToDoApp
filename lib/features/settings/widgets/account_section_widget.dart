@@ -11,17 +11,18 @@ class AccountSection extends StatelessWidget {
       children: [
         SettingsTile(
           icon: Icons.person,
-          title: 'Change account name',
+          title: 'Change your username',
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const ChangeUsernameScreen()),
+                builder: (context) => const ChangeUsernameScreen(),
+              ),
             );
           },
         ),
-        SettingsTile(icon: Icons.lock, title: 'Change account password'),
-        SettingsTile(icon: Icons.image, title: 'Change account image'),
+        const SettingsTile(icon: Icons.lock, title: 'Change account password'),
+        const SettingsTile(icon: Icons.image, title: 'Change account image'),
       ],
     );
   }

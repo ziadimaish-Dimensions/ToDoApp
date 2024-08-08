@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:to_do_app/global/user_service.dart';
+import 'package:to_do_app/global/widgets/custom_elevated_button.dart';
+import 'package:to_do_app/global/widgets/custom_text_field.dart';
 
 class ChangeUsernameScreen extends StatefulWidget {
   const ChangeUsernameScreen({super.key});
 
   @override
-  _ChangeUsernameScreenState createState() => _ChangeUsernameScreenState();
+  State<ChangeUsernameScreen> createState() => _ChangeUsernameScreenState();
 }
 
 class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
@@ -53,23 +55,33 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Change Username'),
+        title: const Text(
+          'Change Username',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            CustomTextField(
+              label: 'Username',
+              hintText: 'Change your username',
               controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'New Username'),
             ),
             const SizedBox(height: 20),
             _isLoading
                 ? const CircularProgressIndicator()
-                : ElevatedButton(
+                : CustomElevatedButton(
+                    text: 'Update Username',
                     onPressed: _changeUsername,
-                    child: const Text('Update Username'),
                   ),
           ],
         ),
