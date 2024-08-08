@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:to_do_app/features/tasks/views/task_details_screen.dart';
 import 'package:to_do_app/global/tasks/task_model.dart';
 
 class TaskTile extends StatelessWidget {
   final TaskModel task;
 
-  TaskTile({required this.task, super.key});
+  const TaskTile({required this.task, super.key});
 
   @override
   Widget build(BuildContext context) {

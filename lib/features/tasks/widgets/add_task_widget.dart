@@ -24,8 +24,8 @@ class AddTaskWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () => _showAddTaskBottomSheet(context),
-      child: const Icon(Icons.add),
       backgroundColor: Colors.purple,
+      child: const Icon(Icons.add),
     );
   }
 }

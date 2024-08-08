@@ -71,9 +71,6 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
     );
   }
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
-
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     SettingsScreen(),
