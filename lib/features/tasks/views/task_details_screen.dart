@@ -22,6 +22,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   TimeOfDay? _selectedTime;
   String? _dateError;
   String? _timeError;
+  String? _selectedCategory;
+  String? _categoryError;
+
+  final List<String> _categories = ['Work', 'School', 'University', 'Personal'];
 
   @override
   void initState() {
@@ -29,6 +33,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     _task = widget.task;
     _selectedDate = _task.time;
     _selectedTime = TimeOfDay(hour: _task.time.hour, minute: _task.time.minute);
+    _selectedCategory = _task.category;
   }
 
   void _editTask(BuildContext context) {
@@ -150,6 +155,49 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
+                      const SizedBox(height: 10),
+                      DropdownButtonFormField<String>(
+                        value: _selectedCategory,
+                        items: _categories.map((String category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setModalState(() {
+                            _selectedCategory = newValue;
+                            _categoryError = null;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Select Category',
+                          labelStyle: const TextStyle(color: Colors.white),
+                          filled: true,
+                          fillColor: Colors.grey[800],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 16.0),
+                        ),
+                        dropdownColor: Colors.grey[800],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please choose a category';
+                          }
+                          return null;
+                        },
+                      ),
+                      if (_categoryError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            _categoryError!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -191,12 +239,21 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                             return;
                           }
 
+                          if (_selectedCategory == null ||
+                              _selectedCategory!.isEmpty) {
+                            setModalState(() {
+                              _categoryError = 'Please choose a category';
+                            });
+                            return;
+                          }
+
                           final updatedTask = TaskModel(
                             id: _task.id,
                             name: nameController.text,
                             details: detailsController.text,
                             time: dateTime,
                             userId: _task.userId,
+                            category: _selectedCategory!,
                           );
                           _taskRepository.updateTask(_task.id, updatedTask);
                           setState(() {
@@ -323,13 +380,24 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               ],
             ),
             const SizedBox(height: 30),
-            const Row(
+            Row(
               children: [
-                Icon(Icons.category, color: Colors.white70),
-                SizedBox(width: 10),
-                Text(
-                  'Task Category: University',
-                  style: TextStyle(color: Colors.white70),
+                const Icon(Icons.category, color: Colors.white70),
+                const SizedBox(width: 10),
+                const Text('Task Category: ',
+                    style: TextStyle(color: Colors.white70)),
+                const SizedBox(width: 10),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[700],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _task.category,
+                    style: const TextStyle(color: Colors.white70),
+                  ),
                 ),
               ],
             ),

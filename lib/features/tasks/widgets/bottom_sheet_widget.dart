@@ -16,15 +16,19 @@ class BottomSheetWidget extends StatefulWidget {
 }
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
-  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-  String? _dateError;
-  String? _timeError;
+  String? _selectedCategory;
   final TaskRepository _taskRepository = TaskRepository();
   User? _currentUser;
+  final _formKey = GlobalKey<FormState>();
+  String? _dateError;
+  String? _timeError;
+  String? _categoryError;
+
+  final List<String> _categories = ['Work', 'School', 'University', 'Personal'];
 
   @override
   void initState() {
@@ -97,23 +101,44 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
         return;
       }
 
+      if (_selectedCategory == null || _selectedCategory!.isEmpty) {
+        setState(() {
+          _categoryError = 'Please choose a category';
+        });
+        return;
+      }
+
       final task = TaskModel(
         id: '',
         name: _nameController.text,
         details: _detailsController.text,
         time: dateTime,
-        userId: widget.userId,
+        userId: _currentUser!.uid,
+        category: _selectedCategory!,
       );
-
       _taskRepository.addTask(task);
       _nameController.clear();
       _detailsController.clear();
       setState(() {
         _selectedDate = null;
         _selectedTime = null;
+        _selectedCategory = null;
       });
-
       Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Task added successfully'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(
+            label: 'UNDO',
+            onPressed: () {
+              _taskRepository.deleteTask(task.id);
+              setState(() {});
+            },
+          ),
+        ),
+      );
     }
   }
 
@@ -124,11 +149,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
         return SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 16,
-              right: 16,
-              top: 16,
-            ),
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 16,
+                right: 16,
+                top: 16),
             child: Form(
               key: _formKey,
               child: Column(
@@ -211,6 +235,49 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
                         _timeError!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  const SizedBox(height: 15),
+                  DropdownButtonFormField<String>(
+                    value: _selectedCategory,
+                    items: _categories.map((String category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setModalState(() {
+                        _selectedCategory = newValue;
+                        _categoryError = null;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Select Category',
+                      labelStyle: const TextStyle(color: Colors.white),
+                      filled: true,
+                      fillColor: Colors.grey[800],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    dropdownColor: Colors.grey[800],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please choose a category';
+                      }
+                      return null;
+                    },
+                  ),
+                  if (_categoryError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        _categoryError!,
                         style: const TextStyle(color: Colors.red),
                       ),
                     ),
