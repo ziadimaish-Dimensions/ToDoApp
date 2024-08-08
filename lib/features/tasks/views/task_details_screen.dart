@@ -303,9 +303,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               children: [
                 const Icon(Icons.access_time, color: Colors.white70),
                 const SizedBox(width: 10),
-                Text(
+                const Text(
                   'Task Time:',
-                  style: const TextStyle(color: Colors.white70),
+                  style: TextStyle(color: Colors.white70),
                 ),
                 const SizedBox(width: 10),
                 Container(
