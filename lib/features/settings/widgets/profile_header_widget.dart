@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/global/user_service.dart';
+import 'package:to_do_app/global/services/user_service.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});

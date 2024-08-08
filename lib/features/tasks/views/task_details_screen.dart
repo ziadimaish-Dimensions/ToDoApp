@@ -299,7 +299,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   }
 
   void _deleteTask(BuildContext context) {
-    _taskRepository.deleteTask(_task.id);
+    _taskRepository.deleteTask(_task.id, _task.name);
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

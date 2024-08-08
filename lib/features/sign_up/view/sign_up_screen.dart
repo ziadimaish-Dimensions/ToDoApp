@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/features/sign_in/view/sign_in_screen.dart';
 import 'package:to_do_app/global/authentication/authentication_repository.dart';
 import 'package:to_do_app/global/authentication/widgets/authentication_widget.dart';
-import 'package:to_do_app/global/user_service.dart';
+import 'package:to_do_app/global/services/user_service.dart';
 import 'package:to_do_app/global/widgets/bottom_nav_bar_widget.dart';
 import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 

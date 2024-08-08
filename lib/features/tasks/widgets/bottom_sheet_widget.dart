@@ -133,7 +133,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
           action: SnackBarAction(
             label: 'UNDO',
             onPressed: () {
-              _taskRepository.deleteTask(task.id);
+              _taskRepository.deleteTask(task.id, task.name);
               setState(() {});
             },
           ),

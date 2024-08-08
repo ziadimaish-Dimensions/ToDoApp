@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/features/sign_in/view/sign_in_screen.dart';
 import 'package:to_do_app/global/authentication/authentication_repository.dart';
-import 'package:to_do_app/global/user_service.dart';
+import 'package:to_do_app/global/services/user_service.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});

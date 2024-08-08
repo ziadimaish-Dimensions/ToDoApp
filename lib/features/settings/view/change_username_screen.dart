@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:to_do_app/global/user_service.dart';
+import 'package:to_do_app/global/services/user_service.dart';
 import 'package:to_do_app/global/widgets/custom_elevated_button.dart';
 import 'package:to_do_app/global/widgets/custom_text_field.dart';
 
