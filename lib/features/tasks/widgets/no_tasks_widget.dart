@@ -5,8 +5,7 @@ class NoTasksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Center(
       child: Column(
         children: [
           Image.asset('assets/images/tasks_image.png'),
