@@ -20,30 +20,41 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: SafeArea(
-        child: GNav(
-          rippleColor: Colors.grey[300]!,
-          hoverColor: Colors.grey[100]!,
-          gap: 8,
-          activeColor: Colors.white,
-          iconSize: 24,
-          duration: const Duration(milliseconds: 400),
-          tabBackgroundColor: Colors.transparent,
-          color: Colors.white,
-          backgroundColor: const Color(0xFF363636),
-          tabs: [
-            _buildGButton(0, Icons.mail, Icons.mail_outline),
-            _buildGButton(
-                1, Icons.calendar_month, Icons.calendar_month_outlined),
-            _buildGButton(2, Icons.add, Icons.add),
-            _buildGButton(3, Icons.access_time_filled, Icons.access_time),
-            _buildGButton(4, Icons.person, Icons.person_outline),
-          ],
-          selectedIndex: _selectedIndex,
-          onTabChange: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF363636),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 20,
+                color: Colors.black.withOpacity(0.1),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+            child: GNav(
+              rippleColor: Colors.grey[300]!,
+              hoverColor: Colors.grey[100]!,
+              gap: 8,
+              activeColor: Colors.white,
+              iconSize: 24,
+              duration: const Duration(milliseconds: 400),
+              tabBackgroundColor: Colors.transparent,
+              color: Colors.white,
+              backgroundColor: const Color(0xFF363636),
+              tabs: [
+                _buildGButton(0, Icons.add, Icons.add),
+                _buildGButton(1, Icons.person, Icons.person_outline),
+              ],
+              selectedIndex: _selectedIndex,
+              onTabChange: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -53,6 +64,10 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
     return GButton(
       icon: _selectedIndex == index ? activeIcon : inactiveIcon,
       text: '',
+      iconActiveColor: Colors.white,
+      iconColor: Colors.white,
+      iconSize: 24,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
     );
   }
 
@@ -60,19 +75,7 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index',
-      style: optionStyle,
-    ),
-    Text(
-      'Calendar',
-      style: optionStyle,
-    ),
     HomeScreen(),
-    Text(
-      'Focus',
-      style: optionStyle,
-    ),
     SettingsScreen(),
   ];
 }
