@@ -3,7 +3,6 @@ import 'package:to_do_app/features/settings/widgets/account_section_widget.dart'
 import 'package:to_do_app/features/settings/widgets/logout_button.dart';
 import 'package:to_do_app/features/settings/widgets/profile_header_widget.dart';
 import 'package:to_do_app/features/settings/widgets/settings_section_widget.dart';
-import 'package:to_do_app/features/settings/widgets/task_info_widget.dart';
 import 'package:to_do_app/features/settings/widgets/update_section_widget.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -11,27 +10,33 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
         backgroundColor: Colors.black,
-        elevation: 0,
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.white),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.black,
+          elevation: 0,
+          title: const Text(
+            'Profile',
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: const SingleChildScrollView(
-        child: Column(
-          children: [
-            ProfileHeader(),
-            TaskInfo(),
-            SettingsSection(),
-            AccountSection(),
-            UptodoSection(),
-            LogoutButton(),
-          ],
+        body: const SingleChildScrollView(
+          child: Column(
+            children: [
+              ProfileHeader(),
+              SizedBox(
+                height: 20,
+              ),
+              SettingsSection(),
+              AccountSection(),
+              UptodoSection(),
+              LogoutButton(),
+            ],
+          ),
         ),
       ),
     );
