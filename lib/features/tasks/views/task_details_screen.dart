@@ -190,12 +190,16 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              _task.name,
-              style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.circle_outlined, color: Colors.white),
+              title: Text(
+                _task.name,
+                style: const TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(height: 8),
             Text(
@@ -207,9 +211,22 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               children: [
                 const Icon(Icons.access_time, color: Colors.white70),
                 const SizedBox(width: 10),
-                Text(
-                  'Task Time: ${DateFormat('yyyy-MM-dd – kk:mm').format(_task.time)}',
-                  style: const TextStyle(color: Colors.white70),
+                const Text(
+                  'Task Time:',
+                  style: TextStyle(color: Colors.white70),
+                ),
+                const SizedBox(width: 10),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[700],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    DateFormat('yyyy-MM-dd – kk:mm').format(_task.time),
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -220,12 +237,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 SizedBox(width: 10),
                 Text(
                   'Task Category: University',
-                  // You can replace this with dynamic category
                   style: TextStyle(color: Colors.white70),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
             const Spacer(),
             Center(
               child: CustomElevatedButton(
@@ -245,8 +260,7 @@ class _DatePicker extends StatelessWidget {
   final DateTime selectedDate;
   final Function(DateTime) onDatePicked;
 
-  const _DatePicker(
-      {required this.selectedDate, required this.onDatePicked, super.key});
+  const _DatePicker({required this.selectedDate, required this.onDatePicked});
 
   @override
   Widget build(BuildContext context) {
@@ -282,8 +296,7 @@ class _TimePicker extends StatelessWidget {
   final TimeOfDay selectedTime;
   final Function(TimeOfDay) onTimePicked;
 
-  const _TimePicker(
-      {required this.selectedTime, required this.onTimePicked, super.key});
+  const _TimePicker({required this.selectedTime, required this.onTimePicked});
 
   @override
   Widget build(BuildContext context) {
