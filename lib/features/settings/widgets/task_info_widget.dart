@@ -5,11 +5,11 @@ class TaskInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           TaskCard(title: '10 Task left'),
           SizedBox(width: 20),
           TaskCard(title: '5 Task done'),

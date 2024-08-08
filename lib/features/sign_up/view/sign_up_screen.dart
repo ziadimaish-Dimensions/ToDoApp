@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/features/sign_in/view/sign_in_screen.dart';
 import 'package:to_do_app/global/authentication/authentication_repository.dart';
 import 'package:to_do_app/global/authentication/widgets/authentication_widget.dart';
+import 'package:to_do_app/global/user_service.dart';
 import 'package:to_do_app/global/widgets/bottom_nav_bar_widget.dart';
 import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 
@@ -13,15 +14,17 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  late final TextEditingController confirmPasswordController;
+  late final TextEditingController nameController;
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
+  late final TextEditingController confirmPasswordController;
   final AuthenticationRepository _authRepository = AuthenticationRepository();
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    nameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
@@ -29,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -40,11 +44,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _isLoading = true;
     });
 
+    final name = nameController.text.trim();
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
       _showErrorMessage("Please fill in all fields.");
       setState(() {
         _isLoading = false;
@@ -60,7 +68,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
-    final user = await _authRepository.signUpWithEmailPassword(email, password);
+    final user =
+        await _authRepository.signUpWithEmailPassword(email, password, name);
 
     if (mounted) {
       setState(() {
@@ -68,6 +77,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });
 
       if (user != null) {
+        UserService().setUserData(user.uid, user.email!, name);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -89,6 +100,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        DismissKeyboard(
+          child: AuthenticationWidget(
+            title: 'Register',
+            firstTextField: 'Name',
+            secondTextField: 'Email',
+            thirdTextField: 'Password',
+            fourthTextField: 'Confirm Password',
+            actionText: 'Register',
+            bottomText: "Already have an account? Login",
+            isSignUp: true,
+            firstController: nameController,
+            secondController: emailController,
+            thirdController: passwordController,
+            fourthController: confirmPasswordController,
+            onPressed: _isLoading ? () {} : onSignUpPressed,
+            onGooglePressed: onGoogleLoginPressed,
+            onApplePressed: onAppleLoginPressed,
+            onBottomTextPressed: onBottomTextPressed,
+            firstHintText: 'Enter your Name',
+            secondHintText: 'Enter your Email',
+            thirdHintText: 'Enter your Password',
+            fourthHintText: 'Confirm your Password',
+          ),
+        ),
+        if (_isLoading)
+          Container(
+            color: Colors.black54,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
+    );
+  }
+
   void onGoogleLoginPressed() {
     print("Google Login Pressed");
   }
@@ -103,42 +153,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       MaterialPageRoute(
         builder: (context) => const SignInScreen(),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        DismissKeyboard(
-          child: AuthenticationWidget(
-            title: 'Register',
-            firstTextField: 'Email',
-            secondTextField: 'Password',
-            thirdTextField: 'Confirm Password',
-            actionText: 'Register',
-            bottomText: "Already have an account? Login",
-            isSignUp: true,
-            firstController: emailController,
-            secondController: passwordController,
-            thirdController: confirmPasswordController,
-            onPressed: _isLoading ? () {} : onSignUpPressed,
-            onGooglePressed: onGoogleLoginPressed,
-            onApplePressed: onAppleLoginPressed,
-            onBottomTextPressed: onBottomTextPressed,
-            firstHintText: 'Enter your Email',
-            secondHintText: 'Enter your Password',
-            thirdHintText: 'Confirm your Password',
-          ),
-        ),
-        if (_isLoading)
-          Container(
-            color: Colors.black54,
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
-      ],
     );
   }
 }

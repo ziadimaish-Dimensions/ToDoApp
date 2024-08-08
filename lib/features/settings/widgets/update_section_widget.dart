@@ -6,8 +6,8 @@ class UptodoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         SettingsTile(icon: Icons.info, title: 'About US'),
         SettingsTile(icon: Icons.help, title: 'FAQ'),
         SettingsTile(icon: Icons.feedback, title: 'Help & Feedback'),
