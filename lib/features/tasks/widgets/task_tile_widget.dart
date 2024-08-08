@@ -5,33 +5,17 @@ import 'package:to_do_app/global/tasks/task_repository.dart';
 import 'package:to_do_app/global/widgets/custom_text_field.dart';
 import 'package:to_do_app/global/widgets/custom_elevated_button.dart';
 
-class TaskTile extends StatelessWidget {
+class TaskTile extends StatefulWidget {
   final TaskModel task;
-  final TaskRepository _taskRepository = TaskRepository();
 
   TaskTile({required this.task, super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(task.id),
-      background: Container(color: Colors.blue),
-      secondaryBackground: Container(color: Colors.red),
-      onDismissed: (direction) {
-        if (direction == DismissDirection.endToStart) {
-          _taskRepository.deleteTask(task.id);
-        } else if (direction == DismissDirection.startToEnd) {
-          _editTask(task, context);
-        }
-      },
-      child: ListTile(
-        title: Text(task.name, style: const TextStyle(color: Colors.white)),
-        subtitle:
-            Text(task.details, style: const TextStyle(color: Colors.white70)),
-        onTap: () => _viewTask(task, context),
-      ),
-    );
-  }
+  _TaskTileState createState() => _TaskTileState();
+}
+
+class _TaskTileState extends State<TaskTile> {
+  final TaskRepository _taskRepository = TaskRepository();
 
   void _editTask(TaskModel task, BuildContext context) {
     final TextEditingController nameController =
@@ -138,6 +122,34 @@ class TaskTile extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      key: Key(widget.task.id),
+      background: Container(color: Colors.blue),
+      secondaryBackground: Container(color: Colors.red),
+      onDismissed: (direction) {
+        setState(() {
+          _taskRepository.deleteTask(widget.task.id);
+        });
+      },
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.startToEnd) {
+          _editTask(widget.task, context);
+          return false;
+        }
+        return true;
+      },
+      child: ListTile(
+        title:
+            Text(widget.task.name, style: const TextStyle(color: Colors.white)),
+        subtitle: Text(widget.task.details,
+            style: const TextStyle(color: Colors.white70)),
+        onTap: () => _viewTask(widget.task, context),
+      ),
     );
   }
 }
