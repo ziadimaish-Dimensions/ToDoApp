@@ -60,6 +60,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+    if (password.length < 6) {
+      _showErrorMessage('Password should be more than 6 characters');
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
     if (password != confirmPassword) {
       _showErrorMessage("Passwords do not match.");
       setState(() {

@@ -6,7 +6,7 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = UserService();
+    final userService = UserService();
 
     return Column(
       children: [
@@ -16,10 +16,18 @@ class ProfileHeader extends StatelessWidget {
           backgroundImage: NetworkImage('https://example.com/profile.jpg'),
         ),
         const SizedBox(height: 10),
-        Text(
-          user.userName ?? 'Guest',
-          style: const TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ValueListenableBuilder<String?>(
+          valueListenable: userService.userName,
+          builder: (context, userName, child) {
+            return Text(
+              userName ?? 'Guest',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
         ),
       ],
     );

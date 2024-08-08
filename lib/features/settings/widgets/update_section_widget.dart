@@ -11,7 +11,7 @@ class UptodoSection extends StatelessWidget {
         SettingsTile(icon: Icons.info, title: 'About US'),
         SettingsTile(icon: Icons.help, title: 'FAQ'),
         SettingsTile(icon: Icons.feedback, title: 'Help & Feedback'),
-        SettingsTile(icon: Icons.support, title: 'Support US'),
+        SettingsTile(icon: Icons.support, title: 'Support Us'),
       ],
     );
   }

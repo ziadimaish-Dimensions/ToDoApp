@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class UserService {
   static final UserService _instance = UserService._internal();
 
@@ -9,17 +11,17 @@ class UserService {
 
   String? userId;
   String? userEmail;
-  String? userName;
+  ValueNotifier<String?> userName = ValueNotifier<String?>(null);
 
   void setUserData(String id, String email, String name) {
     userId = id;
     userEmail = email;
-    userName = name;
+    userName.value = name;
   }
 
   void clearUserData() {
     userId = null;
     userEmail = null;
-    userName = null;
+    userName.value = null;
   }
 }
