@@ -6,6 +6,7 @@ class TaskModel {
   final String details;
   final DateTime time;
   final String userId;
+  final String category;
 
   TaskModel({
     required this.id,
@@ -13,6 +14,7 @@ class TaskModel {
     required this.details,
     required this.time,
     required this.userId,
+    required this.category,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,6 +23,7 @@ class TaskModel {
       'details': details,
       'time': time,
       'userId': userId,
+      'category': category,
     };
   }
 
@@ -32,6 +35,7 @@ class TaskModel {
       details: data['details'] ?? '',
       time: (data['time'] as Timestamp).toDate(),
       userId: data['userId'] ?? '',
+      category: data['category'] ?? '',
     );
   }
 }
