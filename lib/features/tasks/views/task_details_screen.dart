@@ -373,7 +373,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    DateFormat('yyyy-MM-dd – kk:mm').format(_task.time),
+                    DateFormat('dd-MM-yyyy – kk:mm').format(_task.time),
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
