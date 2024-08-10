@@ -23,6 +23,19 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
   final userService = UserService();
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    // If needed, you can initialize the text controller with an existing username
+    _usernameController.text = userService.userName.value ?? '';
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    super.dispose();
+  }
+
   /// Handles the process of changing the username.
   /// The new username is updated in Firestore and the local user service.
   Future<void> _changeUsername() async {
@@ -34,7 +47,19 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
       User? user = _auth.currentUser;
 
       if (user != null) {
-        String newUsername = _usernameController.text;
+        String newUsername = _usernameController.text.trim();
+
+        // Ensure the text field is not empty before updating
+        if (newUsername.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Username cannot be empty')),
+          );
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+
         await _firestore.collection('users').doc(user.uid).update({
           'name': newUsername,
         });
