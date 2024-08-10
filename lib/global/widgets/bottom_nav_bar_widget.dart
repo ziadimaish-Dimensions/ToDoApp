@@ -72,7 +72,7 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
   }
 
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+    TaskScreen(),
     SettingsScreen(),
   ];
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// The `NoTasksWidget` displays a message and an image when there are no tasks to show.
+/// It encourages the user to add new tasks.
+
 class NoTasksWidget extends StatelessWidget {
   const NoTasksWidget({super.key});
 

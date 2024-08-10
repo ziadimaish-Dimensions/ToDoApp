@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// The `SettingsSection` represents a section of settings options within the profile.
+/// It includes tiles for navigating to specific app settings.
+
 class SettingsSection extends StatelessWidget {
   const SettingsSection({super.key});
 
@@ -12,6 +15,9 @@ class SettingsSection extends StatelessWidget {
     );
   }
 }
+
+/// The `SettingsTile` is a reusable widget that displays an icon, title, and
+/// navigates to another screen or performs an action when tapped.
 
 class SettingsTile extends StatelessWidget {
   final IconData icon;

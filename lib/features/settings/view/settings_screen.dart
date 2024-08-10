@@ -5,6 +5,10 @@ import 'package:to_do_app/features/settings/widgets/profile_header_widget.dart';
 import 'package:to_do_app/features/settings/widgets/settings_section_widget.dart';
 import 'package:to_do_app/features/settings/widgets/update_section_widget.dart';
 
+/// The `SettingsScreen` displays the user's profile settings, including options
+/// to change the username, password, account image, and to log out.
+/// It also includes sections for app settings and other information.
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -28,12 +32,10 @@ class SettingsScreen extends StatelessWidget {
           child: Column(
             children: [
               ProfileHeader(),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               SettingsSection(),
               AccountSection(),
-              UptodoSection(),
+              UpdateSectionWidget(),
               LogoutButton(),
             ],
           ),

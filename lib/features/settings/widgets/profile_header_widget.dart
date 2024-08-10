@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/global/services/user_service.dart';
 
+/// The `ProfileHeader` displays the user's profile picture and name at the top of the settings screen.
+/// It listens for changes in the user's name and updates the display accordingly.
+
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
 
@@ -17,8 +20,7 @@ class ProfileHeader extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         ValueListenableBuilder<String?>(
-          valueListenable:
-              userService.userName, // Listen to changes in the user's name.
+          valueListenable: userService.userName,
           builder: (context, userName, child) {
             return Text(
               userName ?? 'Guest',

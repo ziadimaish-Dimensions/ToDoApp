@@ -5,6 +5,10 @@ import 'package:to_do_app/global/services/user_service.dart';
 import 'package:to_do_app/global/widgets/custom_elevated_button.dart';
 import 'package:to_do_app/global/widgets/custom_text_field.dart';
 
+/// The `ChangeUsernameScreen` allows users to update their username.
+/// It interacts with Firebase Authentication and Firestore to update the username
+/// both locally and in the Firestore database.
+
 class ChangeUsernameScreen extends StatefulWidget {
   const ChangeUsernameScreen({super.key});
 
@@ -19,22 +23,23 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
   final userService = UserService();
   bool _isLoading = false;
 
+  /// Handles the process of changing the username.
+  /// The new username is updated in Firestore and the local user service.
   Future<void> _changeUsername() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      User? user = _auth.currentUser; // Get the currently authenticated user.
+      User? user = _auth.currentUser;
 
       if (user != null) {
         String newUsername = _usernameController.text;
         await _firestore.collection('users').doc(user.uid).update({
-          'name': newUsername, // Update the user's name in Firestore.
+          'name': newUsername,
         });
 
-        userService.userName.value =
-            newUsername; // Update the username in the local user service.
+        userService.userName.value = newUsername;
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Username updated successfully')),

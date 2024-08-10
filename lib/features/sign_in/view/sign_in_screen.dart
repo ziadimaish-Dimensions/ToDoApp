@@ -6,6 +6,10 @@ import 'package:to_do_app/global/services/user_service.dart';
 import 'package:to_do_app/global/widgets/bottom_nav_bar_widget.dart';
 import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 
+/// The `SignInScreen` allows users to sign in with their email and password.
+/// It also provides options for Google and Apple sign-in and a link to the sign-up screen.
+/// The screen handles user authentication, error messaging, and navigation to the main app interface upon successful sign-in.
+
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
@@ -33,6 +37,9 @@ class _SignInScreenState extends State<SignInScreen> {
     super.dispose();
   }
 
+  /// Handles the sign-in process with email and password.
+  /// It checks if the inputs are valid, attempts to sign in via the `AuthenticationRepository`,
+  /// and navigates to the main screen if successful.
   Future<void> onSignInPressed() async {
     setState(() {
       _isLoading = true;
@@ -76,6 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  /// Displays an error message in a `SnackBar`.
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -85,14 +93,17 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  /// Placeholder for Google Login button press action.
   void onGoogleLoginPressed() {
     print("Google Login Pressed");
   }
 
+  /// Placeholder for Apple Login button press action.
   void onAppleLoginPressed() {
     print("Apple Login Pressed");
   }
 
+  /// Navigates to the `SignUpScreen` when the user taps on the "Don't have an account? Register" text.
   void onBottomTextPressed() {
     Navigator.push(
       context,
@@ -102,6 +113,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  /// Handles the action when the sign-in button is pressed.
   void _handleSignInPressed() {
     onSignInPressed();
   }
@@ -110,6 +122,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        /// Wraps the main content with a `DismissKeyboard` widget to allow dismissing the keyboard when tapping outside.
         DismissKeyboard(
           child: AuthenticationWidget(
             title: 'Login',
@@ -128,6 +141,8 @@ class _SignInScreenState extends State<SignInScreen> {
             secondHintText: 'Enter your Password',
           ),
         ),
+
+        /// Displays a loading indicator when the sign-in process is ongoing.
         if (_isLoading)
           Container(
             color: Colors.black54,

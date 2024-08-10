@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/features/tasks/views/task_details_screen.dart';
 import 'package:to_do_app/global/tasks/task_model.dart';
 
+/// The `TaskTile` widget displays a single task in a list.
+/// When tapped, it navigates to the `TaskDetailScreen` to show the details of the task.
+
 class TaskTile extends StatelessWidget {
   final TaskModel task;
 

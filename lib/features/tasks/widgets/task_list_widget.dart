@@ -4,6 +4,9 @@ import 'package:to_do_app/features/tasks/widgets/task_tile_widget.dart';
 import 'package:to_do_app/global/tasks/task_model.dart';
 import 'package:to_do_app/global/tasks/task_repository.dart';
 
+/// The `TaskList` widget displays a list of tasks for a specific user.
+/// It shows a loading indicator while tasks are being fetched and displays a message if no tasks are found.
+
 class TaskList extends StatelessWidget {
   final String userId;
   final TaskRepository _taskRepository = TaskRepository();

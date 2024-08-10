@@ -4,14 +4,17 @@ import 'package:to_do_app/features/tasks/widgets/add_task_widget.dart';
 import 'package:to_do_app/features/tasks/widgets/task_list_widget.dart';
 import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+/// The `HomeScreen` displays the list of tasks for the currently signed-in user.
+/// It includes an option to add new tasks and handles keyboard dismissal when the user taps outside of an input field.
+
+class TaskScreen extends StatefulWidget {
+  const TaskScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<TaskScreen> createState() => _TaskScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _TaskScreenState extends State<TaskScreen> {
   User? _currentUser;
 
   @override

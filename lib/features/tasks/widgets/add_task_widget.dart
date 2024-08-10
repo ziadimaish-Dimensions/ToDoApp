@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/features/tasks/widgets/bottom_sheet_widget.dart';
 
+/// The `AddTaskWidget` displays a floating action button that opens a bottom sheet
+/// for adding a new task when pressed.
+
 class AddTaskWidget extends StatelessWidget {
   final String userId;
 
   const AddTaskWidget({required this.userId, super.key});
 
+  /// Displays the bottom sheet for adding a new task.
   void _showAddTaskBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,

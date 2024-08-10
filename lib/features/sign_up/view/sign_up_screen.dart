@@ -6,6 +6,9 @@ import 'package:to_do_app/global/services/user_service.dart';
 import 'package:to_do_app/global/widgets/bottom_nav_bar_widget.dart';
 import 'package:to_do_app/global/widgets/dismiss_keyboard.dart';
 
+/// The `SignUpScreen` allows users to register a new account by providing their name, email, password, and confirmation of the password.
+/// It handles user registration, error messaging, and navigation to the main app interface upon successful sign-up.
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -39,6 +42,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  /// Handles the sign-up process with the provided name, email, password, and confirmation password.
+  /// It checks if all fields are filled, validates the password length, and ensures that the passwords match.
+  /// Upon successful registration, it navigates the user to the main application screen.
   Future<void> onSignUpPressed() async {
     setState(() {
       _isLoading = true;
@@ -99,6 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+  /// Displays an error message in a `SnackBar`.
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -112,6 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        /// Wraps the main content with a `DismissKeyboard` widget to allow dismissing the keyboard when tapping outside.
         DismissKeyboard(
           child: AuthenticationWidget(
             title: 'Register',
@@ -136,6 +144,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             fourthHintText: 'Confirm your Password',
           ),
         ),
+
+        /// Displays a loading indicator when the sign-up process is ongoing.
         if (_isLoading)
           Container(
             color: Colors.black54,
@@ -147,14 +157,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  /// Placeholder for Google Login button press action.
   void onGoogleLoginPressed() {
     print("Google Login Pressed");
   }
 
+  /// Placeholder for Apple Login button press action.
   void onAppleLoginPressed() {
     print("Apple Login Pressed");
   }
 
+  /// Navigates to the `SignInScreen` when the user taps on the "Already have an account? Login" text.
   void onBottomTextPressed() {
     Navigator.pushReplacement(
       context,

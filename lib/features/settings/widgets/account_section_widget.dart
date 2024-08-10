@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/features/settings/view/change_username_screen.dart';
 import 'package:to_do_app/features/settings/widgets/settings_section_widget.dart';
 
+/// The `AccountSection` provides options to change the username, password,
+/// and account image. Tapping on these options navigates to the respective screens.
+
 class AccountSection extends StatelessWidget {
   const AccountSection({super.key});
 

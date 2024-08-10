@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
 
+/// A widget representing a single onboarding page.
+/// It displays an image, a title, a subtitle, and a button text that can be customized.
 class OnBoardingWidget extends StatelessWidget {
   final String title;
   final String subTitle;
   final String imagePath;
-  final String buttonText; // New parameter for button text
+  final String buttonText;
 
   const OnBoardingWidget({
     super.key,
     required this.title,
     required this.subTitle,
     required this.imagePath,
-    this.buttonText = 'NEXT', // Default value for button text
+    this.buttonText = 'NEXT',
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color:Colors.black,
+      color: Colors.black,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(imagePath,width: 215,),
+            Image.asset(
+              imagePath,
+              width: 215,
+            ),
             const SizedBox(height: 20),
             Text(
               title,

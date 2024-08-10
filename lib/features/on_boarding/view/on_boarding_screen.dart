@@ -3,6 +3,10 @@ import 'package:to_do_app/features/on_boarding/widget/on_boarding_widget.dart';
 import 'package:to_do_app/global/authentication/decision_screen.dart';
 import 'package:to_do_app/global/widgets/custom_elevated_button.dart';
 
+/// This screen provides a multi-page onboarding experience for the user.
+/// Users can navigate through pages using the "NEXT" and "BACK" buttons.
+/// On the final page, users are given the option to proceed to the decision screen.
+
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
 
@@ -30,6 +34,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     super.dispose();
   }
 
+  /// Advances the onboarding screen to the next page.
+  /// If the current page is the last one, navigates to the [DecisionScreen].
   void _nextPage() {
     if (_currentPage < 2) {
       _pageController.nextPage(
@@ -52,6 +58,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         canPop: false,
         child: Stack(
           children: [
+            /// The [PageView] displays the onboarding pages.
             PageView(
               controller: _pageController,
               children: const [
@@ -76,6 +83,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ),
               ],
             ),
+
+            /// The indicator dots at the bottom of the screen show the current page.
             Positioned(
               bottom: 30,
               left: 0,
@@ -95,6 +104,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 }),
               ),
             ),
+
+            /// Navigation buttons for moving forward or backward between pages.
             Positioned(
               bottom: 0,
               left: 0,
