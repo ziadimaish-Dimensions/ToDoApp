@@ -25,15 +25,16 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
     });
 
     try {
-      User? user = _auth.currentUser;
+      User? user = _auth.currentUser; // Get the currently authenticated user.
 
       if (user != null) {
         String newUsername = _usernameController.text;
         await _firestore.collection('users').doc(user.uid).update({
-          'name': newUsername,
+          'name': newUsername, // Update the user's name in Firestore.
         });
 
-        userService.userName.value = newUsername;
+        userService.userName.value =
+            newUsername; // Update the username in the local user service.
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Username updated successfully')),

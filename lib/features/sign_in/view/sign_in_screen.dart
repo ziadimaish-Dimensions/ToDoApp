@@ -49,7 +49,8 @@ class _SignInScreenState extends State<SignInScreen> {
       return;
     }
 
-    final user = await _authRepository.signInWithEmailPassword(email, password);
+    final user = await _authRepository.signInWithEmailPassword(
+        email, password); // Attempt to sign in with provided credentials.
 
     if (mounted) {
       setState(() {

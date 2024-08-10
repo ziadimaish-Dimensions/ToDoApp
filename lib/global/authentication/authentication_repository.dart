@@ -5,6 +5,8 @@ class AuthenticationRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  /// Signs up a new user with the provided [email], [password], and [name].
+  /// Returns the [User] if sign-up is successful, or `null` if an error occurs.
   Future<User?> signUpWithEmailPassword(
       String email, String password, String name) async {
     try {
@@ -17,6 +19,7 @@ class AuthenticationRepository {
       User? user = userCredential.user;
 
       if (user != null) {
+        //Store user data in Firestore
         await _firestore.collection('users').doc(user.uid).set({
           'email': email,
           'name': name,
@@ -35,6 +38,8 @@ class AuthenticationRepository {
     }
   }
 
+  /// Signs in an existing user with the provided [email] and [password].
+  /// Returns the [User] if sign-in is successful, or `null` if an error occurs.
   Future<User?> signInWithEmailPassword(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -48,6 +53,8 @@ class AuthenticationRepository {
     }
   }
 
+  /// Fetches the user data from Firestore for the given [uid].
+  /// Returns a [Map] containing the user data if successful, or `null` if an error occurs.
   Future<Map<String, dynamic>?> getUserData(String uid) async {
     try {
       DocumentSnapshot doc =

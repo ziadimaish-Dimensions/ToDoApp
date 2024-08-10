@@ -17,7 +17,8 @@ class ProfileHeader extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         ValueListenableBuilder<String?>(
-          valueListenable: userService.userName,
+          valueListenable:
+              userService.userName, // Listen to changes in the user's name.
           builder: (context, userName, child) {
             return Text(
               userName ?? 'Guest',

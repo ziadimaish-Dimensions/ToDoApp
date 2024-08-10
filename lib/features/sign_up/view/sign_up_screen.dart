@@ -76,8 +76,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
-    final user =
-        await _authRepository.signUpWithEmailPassword(email, password, name);
+    final user = await _authRepository.signUpWithEmailPassword(
+        email, password, name); // Attempt to sign up with provided credentials.
 
     if (mounted) {
       setState(() {
